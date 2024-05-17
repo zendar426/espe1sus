@@ -11,6 +11,8 @@
   <Vbind/>
   <Von></Von>
   <Vmodel/>
+  <hijo></hijo>
+  <padre/>
   <Cpadre/>
   
 
@@ -27,6 +29,8 @@ import Vbind from './Vbind.vue';
 import Von from './Von.vue';
 import Vmodel from './Vmodel.vue';
 import Cpadre from './ComponentePadre.vue';
+import hijo from './Padre.vue'
+import padre  from './Hijo.vue'
 
 const titulo = 'Componente con script setup ඞ'
 const contador = ref(0)
