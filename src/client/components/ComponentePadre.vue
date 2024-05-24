@@ -31,26 +31,67 @@
     </div>
 </template>
 <script>
-import Hijo from './ComponenteHijo.vue';
+import Hijo from './Hijo.vue';
+import { useAppStore } from "../stores/index.js";
+
 export default {
     components: {
         Hijo // Importación del componente hijo
     },
     name: 'Base',
+    setup() {
+        // Acceder a la store de la app
+        const appStore = useAppStore();
+
+        return {
+            appStore
+        };
+    },
     data() {
         return {
             mensajePadre: 'Hola desde el padre', // Mensaje inicial del padre
-            tareas: [ // Lista inicial de tareas
-                { nombre: 'Tarea 1', completada: false },
-                { nombre: 'Tarea 2', completada: false },
-                { nombre: 'Tarea 3', completada: false }
-            ]
+            tareas: [],
+            mensaje: '',
         }
     },
     methods: {
+        obtenerMensaje() {
+            fetch('http://localhost:3000/hello')
+                .then(response => response.text())
+                .then(data => {
+                    this.mensaje = data;
+                });
+        },
         resetearMensaje() {
             this.mensajePadre = 'Hola desde el padre'; // Método para resetear el mensaje del padre
+        },
+        fetchTareas() {
+            fetch('http://localhost:3000/tareas')
+                .then(response => response.json())
+                .then(data => {
+                    this.tareas = data;
+                });
+        },
+        actualizarTarea(index) {
+            fetch('http://localhost:3000/tareas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    index: index,
+                    completada: this.tareas[index].completada
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(`Tarea ${index} actualizada: ${data.completada}`);
+                });
         }
+    },
+    created() {
+        this.fetchTareas();
+        this.obtenerMensaje();
     }
 }
 </script>
